@@ -86,6 +86,15 @@ export function buildSchedule(principal: number, annualRate: number, months: num
   return { months: month, totalInterest, totalPaid, entries };
 }
 
+export function quarterlyBalanceTimeline(entries: Pick<AmortizationMonth, "month" | "balance">[], startYear: number) {
+  return entries.filter((entry) => entry.month % 3 === 0).map((entry) => {
+    const quarterIndex = entry.month / 3 - 1;
+    const year = startYear + Math.floor(quarterIndex / 4);
+    const quarter = quarterIndex % 4 + 1;
+    return { month: entry.month, label: `Q${quarter} ${year}`, axisLabel: quarter === 1 ? String(year) : `Q${quarter}`, balance: entry.balance };
+  });
+}
+
 export function calculateLoan(input: LoanInputs): LoanResult {
   const baseLoan = money(Math.max(0, input.purchasePrice - input.downPayment));
   const fundingFeeRate = getFundingFeeRate(input.fundingFeeExempt, input.priorVaUse, input.downPayment, input.purchasePrice);
