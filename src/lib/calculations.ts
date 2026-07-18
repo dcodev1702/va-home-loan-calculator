@@ -86,13 +86,15 @@ export function buildSchedule(principal: number, annualRate: number, months: num
   return { months: month, totalInterest, totalPaid, entries };
 }
 
-export function quarterlyBalanceTimeline(entries: Pick<AmortizationMonth, "month" | "balance">[], startYear: number) {
-  return entries.filter((entry) => entry.month % 3 === 0).map((entry) => {
-    const quarterIndex = entry.month / 3 - 1;
-    const year = startYear + Math.floor(quarterIndex / 4);
-    const quarter = quarterIndex % 4 + 1;
-    return { month: entry.month, label: `Q${quarter} ${year}`, axisLabel: quarter === 1 ? String(year) : `Q${quarter}`, isFirstQuarter: quarter === 1, balance: entry.balance };
+export function semiannualBalanceTimeline(entries: Pick<AmortizationMonth, "month" | "balance">[], startYear: number, initialBalance: number) {
+  const start = { month: 0, label: `Start ${startYear}`, axisLabel: String(startYear), isYearStart: true, balance: initialBalance };
+  const points = entries.filter((entry) => entry.month % 6 === 0).map((entry) => {
+    const halfYearIndex = entry.month / 6;
+    const isYearStart = halfYearIndex % 2 === 0;
+    const year = startYear + Math.floor(halfYearIndex / 2);
+    return { month: entry.month, label: isYearStart ? `Start ${year}` : `Mid ${year}`, axisLabel: isYearStart ? String(year) : "", isYearStart, balance: entry.balance };
   });
+  return [start, ...points];
 }
 
 export function calculateLoan(input: LoanInputs): LoanResult {

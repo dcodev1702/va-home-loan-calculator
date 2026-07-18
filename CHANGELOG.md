@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.2.3] - 2026-07-18
+
+### Changed
+- Simplified the payoff-chart time axis from quarterly to semiannual ticks: year start, six-month mark, then the following year start.
+
 ## [0.2.2] - 2026-07-18
 
 ### Fixed

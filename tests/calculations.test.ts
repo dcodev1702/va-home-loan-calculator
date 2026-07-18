@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateLoan, getFundingFeeRate, quarterlyBalanceTimeline } from "../src/lib/calculations";
+import { calculateLoan, getFundingFeeRate, semiannualBalanceTimeline } from "../src/lib/calculations";
 
 describe("VA loan calculation", () => {
   it("uses the first-use VA funding fee for zero-down, non-exempt financing", () => {
@@ -61,11 +61,12 @@ describe("VA loan calculation", () => {
     expect(result.accelerated.months).toBeLessThan(result.baseline.months);
   });
 
-  it("creates quarter-end balance points with calendar labels", () => {
-    const points = quarterlyBalanceTimeline([{ month: 1, balance: 100 }, { month: 3, balance: 90 }, { month: 6, balance: 80 }], 2026);
+  it("creates semiannual balance points with one calendar-year label per year", () => {
+    const points = semiannualBalanceTimeline([{ month: 1, balance: 98 }, { month: 6, balance: 90 }, { month: 12, balance: 80 }], 2026, 100);
     expect(points).toEqual([
-      { month: 3, label: "Q1 2026", axisLabel: "2026", isFirstQuarter: true, balance: 90 },
-      { month: 6, label: "Q2 2026", axisLabel: "Q2", isFirstQuarter: false, balance: 80 },
+      { month: 0, label: "Start 2026", axisLabel: "2026", isYearStart: true, balance: 100 },
+      { month: 6, label: "Mid 2026", axisLabel: "", isYearStart: false, balance: 90 },
+      { month: 12, label: "Start 2027", axisLabel: "2027", isYearStart: true, balance: 80 },
     ]);
   });
 });
