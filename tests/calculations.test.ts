@@ -64,8 +64,8 @@ describe("VA loan calculation", () => {
   it("creates quarter-end balance points with calendar labels", () => {
     const points = quarterlyBalanceTimeline([{ month: 1, balance: 100 }, { month: 3, balance: 90 }, { month: 6, balance: 80 }], 2026);
     expect(points).toEqual([
-      { month: 3, label: "Q1 2026", axisLabel: "2026", balance: 90 },
-      { month: 6, label: "Q2 2026", axisLabel: "Q2", balance: 80 },
+      { month: 3, label: "Q1 2026", axisLabel: "2026", isFirstQuarter: true, balance: 90 },
+      { month: 6, label: "Q2 2026", axisLabel: "Q2", isFirstQuarter: false, balance: 80 },
     ]);
   });
 });

@@ -91,7 +91,7 @@ export function quarterlyBalanceTimeline(entries: Pick<AmortizationMonth, "month
     const quarterIndex = entry.month / 3 - 1;
     const year = startYear + Math.floor(quarterIndex / 4);
     const quarter = quarterIndex % 4 + 1;
-    return { month: entry.month, label: `Q${quarter} ${year}`, axisLabel: quarter === 1 ? String(year) : `Q${quarter}`, balance: entry.balance };
+    return { month: entry.month, label: `Q${quarter} ${year}`, axisLabel: quarter === 1 ? String(year) : `Q${quarter}`, isFirstQuarter: quarter === 1, balance: entry.balance };
   });
 }
 
