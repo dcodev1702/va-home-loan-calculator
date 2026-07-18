@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateLoan, getFundingFeeRate, semiannualBalanceTimeline } from "../src/lib/calculations";
+import { calculateLoan, dtiStatus, getFundingFeeRate, semiannualBalanceTimeline } from "../src/lib/calculations";
 
 describe("VA loan calculation", () => {
   it("uses the first-use VA funding fee for zero-down, non-exempt financing", () => {
@@ -59,6 +59,13 @@ describe("VA loan calculation", () => {
     expect(result.interestSaved).toBeGreaterThan(0);
     expect(result.monthsSaved).toBeGreaterThan(0);
     expect(result.accelerated.months).toBeLessThan(result.baseline.months);
+  });
+
+  it("classifies DTI ratios with the requested green, yellow, and red thresholds", () => {
+    expect(dtiStatus(41.0)).toBe("good");
+    expect(dtiStatus(41.1)).toBe("warning");
+    expect(dtiStatus(46.0)).toBe("warning");
+    expect(dtiStatus(46.1)).toBe("bad");
   });
 
   it("creates semiannual balance points with one calendar-year label per year", () => {

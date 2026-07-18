@@ -53,6 +53,12 @@ export function getFundingFeeRate(exempt: boolean, priorUse: boolean, downPaymen
   return priorUse ? 0.033 : 0.0215;
 }
 
+export function dtiStatus(ratio: number): "good" | "warning" | "bad" {
+  if (ratio <= 41) return "good";
+  if (ratio <= 46) return "warning";
+  return "bad";
+}
+
 export function monthlyPayment(principal: number, annualRate: number, months: number): number {
   if (months <= 0 || principal <= 0) return 0;
   const rate = annualRate / 100 / 12;

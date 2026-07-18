@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.2.4] - 2026-07-18
+
+### Changed
+- Added flexible DTI status thresholds: green through 41.0%, yellow from 41.1% through 46.0%, and red from 46.1% onward.
+
 ## [0.2.3] - 2026-07-18
 
 ### Changed
