@@ -1,0 +1,9 @@
+services:
+  sentinel-va:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist saved scenarios on the host between runs.
+      - ./data:/app/data
+    restart: unless-stopped

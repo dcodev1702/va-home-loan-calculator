@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.4.0] - 2026-07-19
+
+### Added
+- Portable run options so anyone can run Sentinel VA locally: a `run.sh` one-command source launcher (Node 20+, no Docker), a multi-stage `Dockerfile` + `docker-compose.yml` that compile the native SQLite module in-image and persist scenarios via a `data/` volume, and a `RUNNING.md` guide covering both paths.
+
 ## [0.3.6] - 2026-07-19
 
 ### Changed

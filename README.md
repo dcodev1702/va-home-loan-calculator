@@ -48,6 +48,14 @@ npm run dev
 
 Open http://localhost:3000.
 
+## Run as a portable app
+
+To hand this to someone else to run on their own machine — from source or via Docker — see [RUNNING.md](RUNNING.md). One-command source launch:
+
+```bash
+./run.sh
+```
+
 ## Quality checks
 
 ```bash
