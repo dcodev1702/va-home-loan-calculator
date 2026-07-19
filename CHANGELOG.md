@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.6.0] - 2026-07-19
+
+### Changed
+- Upgraded the Docker base image from `node:22-bookworm-slim` to `node:26-bookworm-slim` (digest-pinned in both build and runtime stages), per the Dependabot base-image update. The `better-sqlite3` native module recompiles cleanly against the Node 26 ABI and the standalone server runs on Node 26; validated with a full image build plus HTTP, database write/read/delete, and storage-status round-trip.
+
 ## [0.5.9] - 2026-07-19
 
 ### Added

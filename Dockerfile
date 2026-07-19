@@ -1,6 +1,6 @@
 # --- Build stage: install deps + compile the app ---
-# Base image pinned by digest for reproducible, tamper-resistant builds (node:22-bookworm-slim).
-FROM node:22-bookworm-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3 AS build
+# Base image pinned by digest for reproducible, tamper-resistant builds (node:26-bookworm-slim).
+FROM node:26-bookworm-slim@sha256:2d49d876e96237d76de412761cf05dbfe5aee325cc4406a4d41d5824c5bb8beb AS build
 # better-sqlite3 is a native module; it needs a C/C++ toolchain to compile.
 # The toolchain lives ONLY in this stage — it never reaches the runtime image.
 RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # --- Runtime stage: minimal image that just runs the traced standalone server ---
-FROM node:22-bookworm-slim@sha256:6c74791e557ce11fc957704f6d4fe134a7bc8d6f5ca4403205b2966bd488f6b3 AS runtime
+FROM node:26-bookworm-slim@sha256:2d49d876e96237d76de412761cf05dbfe5aee325cc4406a4d41d5824c5bb8beb AS runtime
 # Apply outstanding OS security patches on top of the pinned base, then strip
 # apt metadata so the layer stays small and no package manager cache ships.
 RUN apt-get update && apt-get upgrade -y \
