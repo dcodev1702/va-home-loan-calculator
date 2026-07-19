@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [0.5.4] - 2026-07-19
 
+### Added
+- Added a Dependabot configuration (`.github/dependabot.yml`) that watches the digest-pinned `node:22-bookworm-slim` base image and opens a PR when the upstream tag resolves to a new digest, so base-image updates are reviewed and CI-gated rather than pulled blindly.
+
 ### Changed
 - Pinned the Docker base image (`node:22-bookworm-slim`) by digest in both build and runtime stages for reproducible, tamper-resistant builds.
 - Pruned devDependencies from the runtime image via `npm prune --omit=dev` after the build, shrinking the shipped image while keeping the compiled `better-sqlite3` native module intact.
