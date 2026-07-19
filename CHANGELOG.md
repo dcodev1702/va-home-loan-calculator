@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.3.1] - 2026-07-18
+
+### Changed
+- Made the Load, Rename, and Delete scenario pills glossy and semi-transparent with translucent tinted gradients and inset highlights.
+
 ## [0.3.0] - 2026-07-18
 
 ### Changed
