@@ -64,7 +64,7 @@ A prebuilt image is published at [`digitalkali/sentinel-va`](https://hub.docker.
 docker run -d -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
 ```
 
-Open http://localhost:3000. The `-v` mount persists saved scenarios in `./data/` on the host between runs. Pin a specific release with `:0.4.0` instead of `:latest`.
+Open http://localhost:3000. The `-v` mount persists saved scenarios in `./data/` on the host between runs. Use `:latest` to always pull the newest build (the app and image are updated frequently).
 
 ## Quality checks
 
