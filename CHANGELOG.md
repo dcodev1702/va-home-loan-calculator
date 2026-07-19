@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.2.8] - 2026-07-18
+
+### Changed
+- Restyled scenario actions as smooth neon pills: Load/Save blue, Rename yellow, and Delete red.
+- Replaced README imagery with four complete, section-focused screenshots and added VA-loan and homeownership learning resources.
+
 ## [0.2.7] - 2026-07-18
 
 ### Changed

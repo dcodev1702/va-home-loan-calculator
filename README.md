@@ -15,17 +15,21 @@ A private, local-first VA home-loan planning workspace built with Next.js, TypeS
 
 ## Screenshots
 
-### Loan, payment, and household income
+### Financial overview and affordability mix
 
-![Sentinel VA loan and income workspace](docs/screenshots/overview.png)
+![Sentinel VA dashboard overview with payment metrics and affordability pie charts](docs/screenshots/dashboard-overview.png)
 
-### Budget, liabilities, and VA-style residual-income context
+### Loan setup and household income
 
-![Sentinel VA affordability workspace](docs/screenshots/affordability.png)
+![Sentinel VA loan payment and household income workspace](docs/screenshots/loan-income.png)
 
-### Extra-principal payoff analysis
+### Budget, liabilities, residual income, and DTI
 
-![Sentinel VA payoff analysis chart and annual savings table](docs/screenshots/payoff-analysis.png)
+![Sentinel VA monthly budget and residual-income workspace](docs/screenshots/affordability.png)
+
+### Extra-principal payoff strategy
+
+![Sentinel VA payoff workspace with neon scenario actions, balance chart, and annual savings table](docs/screenshots/payoff-analysis.png)
 
 ## Tech stack
 
@@ -60,3 +64,14 @@ Saved scenarios are stored in `data/sentinel-va.db` on the machine running the a
 
 - `PRODUCT_SPEC.md` — feature and engineering specification.
 - `DESIGN.md` — visual-system tokens and UX rules.
+
+## Learning resources
+
+Use these independent resources to understand VA loans, mortgage costs, and home-buying decisions:
+
+- [VA home loan programs](https://www.va.gov/housing-assistance/home-loans/)
+- [VA funding fees and closing costs](https://www.va.gov/housing-assistance/home-loans/funding-fee-and-closing-costs/)
+- [VA loan limits](https://www.va.gov/housing-assistance/home-loans/loan-limits/)
+- [Consumer Financial Protection Bureau: Owning a Home](https://www.consumerfinance.gov/owning-a-home/)
+- [CFPB mortgage calculator](https://www.consumerfinance.gov/owning-a-home/explore-rates/)
+- [Fannie Mae HomeView® homeownership course](https://www.fanniemae.com/education)
