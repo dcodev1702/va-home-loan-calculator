@@ -49,10 +49,11 @@ function BalanceChart({ baseline, accelerated, initialBalance }: { baseline: { m
 }
 
 export default function LoanCalculator() {
-  const [loan, setLoan] = useState<LoanInputs>(() => loadLocal("sentinel-va-loan", initialLoan));
-  const [incomes, setIncomes] = useState<Income[]>(() => loadLocal("sentinel-va-incomes", initialIncomes));
-  const [budgets, setBudgets] = useState<Budget[]>(() => loadLocal("sentinel-va-budgets", [{ id: id(), label: "Car loan", amount: 450, onCreditReport: true }, { id: id(), label: "Student loans", amount: 150, onCreditReport: true }, { id: id(), label: "Food", amount: 750, onCreditReport: false }]));
-  const [childcare, setChildcare] = useState(() => loadLocal("sentinel-va-childcare", 0)); const [state, setState] = useState(() => loadLocal("sentinel-va-state", "IL")); const [householdSize, setHouseholdSize] = useState(() => loadLocal("sentinel-va-household-size", 4));
+  const [loan, setLoan] = useState<LoanInputs>(initialLoan);
+  const [incomes, setIncomes] = useState<Income[]>(initialIncomes);
+  const [budgets, setBudgets] = useState<Budget[]>([{ id: id(), label: "Car loan", amount: 450, onCreditReport: true }, { id: id(), label: "Student loans", amount: 150, onCreditReport: true }, { id: id(), label: "Food", amount: 750, onCreditReport: false }]);
+  const [childcare, setChildcare] = useState(0); const [state, setState] = useState("IL"); const [householdSize, setHouseholdSize] = useState(4);
+  const [hasHydrated, setHasHydrated] = useState(false);
   const [saved, setSaved] = useState<Scenario[]>([]); const [selectedScenarioId, setSelectedScenarioId] = useState(""); const [saving, setSaving] = useState(false); const [notice, setNotice] = useState(""); const [scenarioName, setScenarioName] = useState("");
   const result = useMemo(() => calculateLoan(loan), [loan]);
   const stats = useMemo(() => {
@@ -65,15 +66,28 @@ export default function LoanCalculator() {
     const residual = net - result.totalMonthlyPayment - liabilities - utilities - childcare;
     return { gross, qualifying, net, liabilities, personal, utilities, required, residual, dti: qualifying ? ((result.totalMonthlyPayment + liabilities) / qualifying) * 100 : 0, moneyLeft: net - result.totalMonthlyPayment - personal - childcare, region };
   }, [budgets, childcare, householdSize, incomes, loan.purchasePrice, result.totalMonthlyPayment, state]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setLoan(loadLocal("sentinel-va-loan", initialLoan));
+      setIncomes(loadLocal("sentinel-va-incomes", initialIncomes));
+      setBudgets((current) => loadLocal("sentinel-va-budgets", current));
+      setChildcare(loadLocal("sentinel-va-childcare", 0));
+      setState(loadLocal("sentinel-va-state", "IL"));
+      setHouseholdSize(loadLocal("sentinel-va-household-size", 4));
+      setHasHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
   useEffect(() => { fetch("/api/scenarios").then((r) => r.ok ? r.json() : { scenarios: [] }).then((data) => setSaved(data.scenarios ?? [])).catch(() => undefined); }, []);
   useEffect(() => {
+    if (!hasHydrated) return;
     window.localStorage.setItem("sentinel-va-loan", JSON.stringify(loan));
     window.localStorage.setItem("sentinel-va-incomes", JSON.stringify(incomes));
     window.localStorage.setItem("sentinel-va-budgets", JSON.stringify(budgets));
     window.localStorage.setItem("sentinel-va-childcare", JSON.stringify(childcare));
     window.localStorage.setItem("sentinel-va-state", JSON.stringify(state));
     window.localStorage.setItem("sentinel-va-household-size", JSON.stringify(householdSize));
-  }, [loan, incomes, budgets, childcare, state, householdSize]);
+  }, [loan, incomes, budgets, childcare, state, householdSize, hasHydrated]);
   const updateLoan = (key: keyof LoanInputs, value: number | boolean) => setLoan((current) => ({ ...current, [key]: value }));
   const saveScenario = async () => { const name = scenarioName.trim() || `VA plan · ${new Date().toLocaleDateString()}`; setSaving(true); setNotice(""); try { const response = await fetch("/api/scenarios", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, payload: { loan, incomes, budgets, childcare, state, householdSize } }) }); const data = await response.json(); if (!response.ok) throw new Error(); setSaved((items) => [data.scenario, ...items]); setSelectedScenarioId(String(data.scenario.id)); setScenarioName(""); setNotice("Scenario saved to local SQLite."); } catch { setNotice("Unable to save scenario."); } finally { setSaving(false); } };
   const restore = (scenario: Scenario) => { setLoan(scenario.payload.loan); setIncomes(scenario.payload.incomes); setBudgets(scenario.payload.budgets); setChildcare(scenario.payload.childcare); setState(scenario.payload.state); setHouseholdSize(scenario.payload.householdSize); setNotice(`Restored ${scenario.name}.`); };
