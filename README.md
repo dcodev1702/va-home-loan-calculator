@@ -17,21 +17,31 @@ A private, local-first VA home-loan planning workspace built with Next.js, TypeS
 
 ### Financial overview and affordability mix
 
+The top-line view answers "can I afford this?" at a glance: total monthly housing payment, net income, VA-style residual, back-end DTI, and lifetime interest saved. The two donut charts break down where each dollar of net income goes and how the payment stacks up against the required residual-income cushion. Hovering any slice reveals its exact percentage and dollar amount.
+
 ![Sentinel VA dashboard overview with payment metrics and affordability pie charts](docs/images/dashboard-overview.png)
 
 ### Loan setup and household income
+
+This is where you build the scenario. The left panel assembles the financed loan — purchase price, down payment, rate, term, taxes, insurance, HOA, and the VA funding fee (with exemption and prior-use handling) — into a true total monthly payment. The right panel captures household income, including a 25% gross-up on tax-free income (VA disability, BAH/BAS) for DTI purposes only.
 
 ![Sentinel VA loan payment and household income workspace](docs/images/loan-income.png)
 
 ### Budget, liabilities, residual income, and DTI
 
+Enter monthly obligations and flag which ones appear on your credit report so they count toward VA residual income and DTI. The right panel runs a simplified, state-aware VA residual-income screen — mapping your region, household size, and childcare against the minimum required residual — and reports both front-end and back-end DTI. It is explicitly a planning heuristic, not an underwriting decision.
+
 ![Sentinel VA monthly budget and residual-income workspace](docs/images/affordability.png)
 
 ### Extra-principal payoff strategy
 
+The Acceleration Lab shows the payoff of paying down principal faster. Set an extra monthly amount (and optional annual lump sum) and the neon balance chart overlays your accelerated payoff against the original schedule, while the metrics call out total interest saved and years shaved off. The annual table breaks the savings down year by year, and scenarios can be saved locally for later comparison.
+
 ![Sentinel VA payoff workspace with neon scenario actions, balance chart, and annual savings table](docs/images/payoff-analysis.png)
 
 ### Sweet-spot comparison
+
+This view runs the same loan across several extra-payment tiers at once so you can find the balance between monthly strain and lifetime savings. Each tier is a distinctly colored line on the balance chart (your current plan highlighted), and the table lays out the trade-off precisely: total monthly out-of-pocket, payoff time, time saved, total interest paid, and interest saved for every tier. It turns "should I pay a little more each month?" into a side-by-side decision.
 
 ![Sentinel VA sweet-spot comparison chart and table across extra-payment tiers, showing total monthly payment, payoff time, total interest paid, and interest saved per tier](docs/images/sweet-spot-comparison.png)
 

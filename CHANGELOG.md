@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.5] - 2026-07-19
+
+### Changed
+- Added a short 2–4 sentence narrative under each README screenshot heading explaining what that view communicates (financial overview, loan/income setup, budget & residual/DTI, extra-principal payoff, and the sweet-spot comparison).
+
 ## [0.7.4] - 2026-07-19
 
 ### Added
