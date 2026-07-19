@@ -61,35 +61,7 @@ layer, one JSON API route, and a component-composed client UI.
 
 ## 3. System architecture
 
-### 3.1 High-level topology
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│ Browser (single-page client)                                      │
-│  page.tsx → LoanCalculator.tsx (state + layout orchestrator)      │
-│    ├─ useMemo(calculateLoan)         ── pure domain engine        │
-│    ├─ useMemo(payoffLadder)          ── sweet-spot tiers          │
-│    ├─ components/ (NumberField, Metric, PieChart,                 │
-│    │              BalanceChart, SweetSpotChart)                   │
-│    ├─ localStorage  ── input persistence across refreshes         │
-│    └─ fetch('/api/scenarios')  ── saved-scenario CRUD + storage   │
-└───────────────────────────┬──────────────────────────────────────┘
-                            │ HTTP (same origin)
-┌───────────────────────────▼──────────────────────────────────────┐
-│ Next.js server (node server.js, standalone)                       │
-│  app/api/scenarios/route.ts  (runtime = "nodejs")                 │
-│    GET / POST / PATCH / DELETE                                     │
-│         │                                                         │
-│         ▼                                                         │
-│  lib/scenarios.ts  ── better-sqlite3 + storage cap enforcement    │
-└───────────────────────────┬──────────────────────────────────────┘
-                            │ file I/O
-┌───────────────────────────▼──────────────────────────────────────┐
-│ /app/data  (bind-mounted from host loopback ext4 image)           │
-│   sentinel-va.db  + -wal + -shm   (WAL journal mode)              │
-│   hard-capped at ~1.1 GB (kernel ENOSPC backstop)                 │
-└──────────────────────────────────────────────────────────────────┘
-```
 
 ### 3.2 Request/data flow
 1. **Compute path (no server):** All planning math runs **client-side** inside
