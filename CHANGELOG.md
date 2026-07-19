@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.3.6] - 2026-07-19
+
+### Changed
+- Refactored the monolithic `LoanCalculator` into focused modules: shared `formatting` helpers and `types`, plus dedicated `NumberField`, `Metric`, `PieChart`, and `BalanceChart` components under `components/`, leaving `LoanCalculator.tsx` as a slim state-and-layout orchestrator. No behavior change.
+
 ## [0.3.5] - 2026-07-19
 
 ### Changed
