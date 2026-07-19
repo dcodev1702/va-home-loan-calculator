@@ -4,6 +4,15 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.1] - 2026-07-19
+
+### Changed
+- Migrated the runtime image to a distroless base (`gcr.io/distroless/nodejs24-debian12:nonroot`, digest-pinned), aligning both stages to Node 24 (distroless publishes nodejs22/nodejs24, not nodejs26). Distroless has no shell, package manager, perl, npm, or tar, so those attack surfaces — including the tar CVE (CVE-2025-45582) — are eliminated by construction rather than purged. The image runs as the built-in nonroot user (uid 65532) and is ~33% smaller (423MB → 281MB on disk).
+- Overlaid the patched Node binary (24.18.0) from the build base onto the distroless runtime, which ships an older 24.14.0. This clears all Node-runtime CVEs fixed in 24.14.1/24.17.0, including CVE-2026-21710 and CVE-2026-21637. Validated: better-sqlite3 loads under the distroless runtime, and the image passes the HTTP + database write/read/delete + storage-status round-trip.
+
+### Known limitations
+- The distroless base cannot be OS-patched in-image (no apt), so its glibc/libssl packages track Google's distroless rebuild cadence rather than same-day Debian point releases. Base-image digest updates are adopted deliberately (pinned) as newer distroless builds land.
+
 ## [0.6.3] - 2026-07-19
 
 ### Changed
