@@ -15,7 +15,9 @@ ENV NODE_ENV=production
 WORKDIR /app
 # Bring over the whole built app (node_modules includes the compiled better-sqlite3).
 COPY --from=build /app ./
+RUN mkdir -p /app/data && chown -R node:node /app/data
 # Saved scenarios live here; mount a volume to persist them across restarts.
 VOLUME ["/app/data"]
 EXPOSE 3000
+USER node
 CMD ["npm", "run", "start"]

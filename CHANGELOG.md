@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.2] - 2026-07-19
+
+### Security
+- Hardened Docker runtime defaults so rebuilt images and Compose launches run the app as the non-root `node` user, drop all Linux capabilities, and enable `no-new-privileges`, while keeping the persisted `/app/data` volume writable.
+- Updated the Docker Hub run instructions to include the same non-root and capability-dropping flags used by the Compose setup.
+
 ## [0.5.1] - 2026-07-19
 
 ### Changed

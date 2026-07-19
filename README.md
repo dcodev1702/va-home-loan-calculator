@@ -61,10 +61,10 @@ To hand this to someone else to run on their own machine — from source or via 
 A prebuilt image is published at [`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va). No cloning or Node.js required — just Docker:
 
 ```bash
-docker run -d -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
+mkdir -p data && docker run -d --user 1000:1000 --security-opt no-new-privileges:true --cap-drop ALL -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
 ```
 
-Open http://localhost:3000. The `-v` mount persists saved scenarios in `./data/` on the host between runs. Use `:latest` to always pull the newest build (the app and image are updated frequently).
+Open http://localhost:3000. The `-v` mount persists saved scenarios in `./data/` on the host between runs, while `--user`, `--security-opt`, and `--cap-drop` keep the app running with the same non-root hardening used by the compose file. Use `:latest` to always pull the newest build (the app and image are updated frequently).
 
 ## Quality checks
 
