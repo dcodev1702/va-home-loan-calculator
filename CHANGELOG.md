@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.3.0] - 2026-07-18
+
+### Changed
+- Restyled Save, Load, Rename, and Delete controls as glossy neon pills with blue, yellow, and red action colors.
+- Published the GitHub repository as a public project.
+
 ## [0.2.9] - 2026-07-18
 
 ### Fixed
