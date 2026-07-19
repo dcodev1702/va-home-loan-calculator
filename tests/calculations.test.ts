@@ -6,6 +6,50 @@ describe("VA loan calculation", () => {
     expect(getFundingFeeRate(false, false, 0)).toBe(0.0215);
   });
 
+  it("applies the full VA funding-fee rate chart (effective April 7, 2023)", () => {
+    const price = 400000;
+    // Exempt always waives the fee regardless of down payment or prior use.
+    expect(getFundingFeeRate(true, false, 0, price)).toBe(0);
+    expect(getFundingFeeRate(true, true, 80000, price)).toBe(0);
+    // First use: <5% -> 2.15%, >=5% -> 1.5%, >=10% -> 1.25%.
+    expect(getFundingFeeRate(false, false, 0, price)).toBe(0.0215);
+    expect(getFundingFeeRate(false, false, 19999, price)).toBe(0.0215); // 4.99% down
+    expect(getFundingFeeRate(false, false, 20000, price)).toBe(0.015); // exactly 5%
+    expect(getFundingFeeRate(false, false, 39999, price)).toBe(0.015); // 9.99% down
+    expect(getFundingFeeRate(false, false, 40000, price)).toBe(0.0125); // exactly 10%
+    // Subsequent use: only the <5% tier differs (3.3%); >=5% matches first use.
+    expect(getFundingFeeRate(false, true, 0, price)).toBe(0.033);
+    expect(getFundingFeeRate(false, true, 19999, price)).toBe(0.033); // 4.99% down
+    expect(getFundingFeeRate(false, true, 20000, price)).toBe(0.015); // exactly 5%
+    expect(getFundingFeeRate(false, true, 40000, price)).toBe(0.0125); // exactly 10%
+    // Guard against divide-by-zero when purchase price is 0.
+    expect(getFundingFeeRate(false, false, 0, 0)).toBe(0.0215);
+  });
+
+  it("finances the funding fee into the loan and payment when not exempt", () => {
+    const base = {
+      purchasePrice: 400000,
+      downPayment: 0,
+      interestRate: 6.5,
+      termYears: 30,
+      propertyTaxAnnual: 0,
+      insuranceAnnual: 0,
+      hoaMonthly: 0,
+      priorVaUse: false,
+      extraMonthly: 0,
+      annualLumpSum: 0,
+    };
+    const exempt = calculateLoan({ ...base, fundingFeeExempt: true });
+    const financed = calculateLoan({ ...base, fundingFeeExempt: false });
+    expect(exempt.fundingFee).toBe(0);
+    expect(exempt.financedLoan).toBe(400000);
+    // First-use zero-down fee is 2.15% of the $400k base loan = $8,600, financed on top.
+    expect(financed.fundingFeeRate).toBe(0.0215);
+    expect(financed.fundingFee).toBeCloseTo(8600, 2);
+    expect(financed.financedLoan).toBeCloseTo(408600, 2);
+    expect(financed.principalAndInterest).toBeGreaterThan(exempt.principalAndInterest);
+  });
+
   it("calculates a standard $400,000 30-year payment at 6.5%", () => {
     const result = calculateLoan({
       purchasePrice: 400000,

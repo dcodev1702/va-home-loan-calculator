@@ -45,6 +45,10 @@ export type LoanResult = {
 
 const money = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
+// VA-backed purchase/construction funding-fee rates, effective April 7, 2023.
+// https://www.va.gov/housing-assistance/home-loans/funding-fee-and-closing-costs/
+// Down payment >=10% -> 1.25% and >=5% -> 1.5% for both first and subsequent use;
+// only the <5% tier differs (first 2.15% vs. subsequent 3.3%).
 export function getFundingFeeRate(exempt: boolean, priorUse: boolean, downPayment: number, purchasePrice = 1): number {
   if (exempt) return 0;
   const ratio = purchasePrice > 0 ? downPayment / purchasePrice : 0;
