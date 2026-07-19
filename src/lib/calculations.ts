@@ -96,6 +96,19 @@ export function buildSchedule(principal: number, annualRate: number, months: num
   return { months: month, totalInterest, totalPaid, entries };
 }
 
+export type LadderRung = { extraMonthly: number; months: number; totalInterest: number; interestSaved: number; monthsSaved: number; entries: AmortizationMonth[] };
+
+// Runs the same financed loan against several extra-monthly-principal tiers so the
+// user can see the "sweet spot" tradeoff between payment strain and interest saved.
+// The baseline (extra = 0) anchors interestSaved/monthsSaved for every rung.
+export function payoffLadder(principal: number, annualRate: number, months: number, extras: number[]): LadderRung[] {
+  const baseline = buildSchedule(principal, annualRate, months);
+  return extras.map((extraMonthly) => {
+    const schedule = extraMonthly <= 0 ? baseline : buildSchedule(principal, annualRate, months, extraMonthly);
+    return { extraMonthly, months: schedule.months, totalInterest: schedule.totalInterest, interestSaved: money(baseline.totalInterest - schedule.totalInterest), monthsSaved: baseline.months - schedule.months, entries: schedule.entries };
+  });
+}
+
 export function semiannualBalanceTimeline(entries: Pick<AmortizationMonth, "month" | "balance">[], startYear: number, initialBalance: number) {
   const start = { month: 0, label: `Start ${startYear}`, axisLabel: String(startYear), isYearStart: true, balance: initialBalance };
   const points = entries.filter((entry) => entry.month % 6 === 0).map((entry) => {

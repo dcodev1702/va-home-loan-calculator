@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.0] - 2026-07-19
+
+### Added
+- Sweet-spot comparison in the Acceleration Lab: a collapsible panel that overlays the same loan across several extra-monthly-principal tiers (baseline, +$250, +$500, +$1,000, +$2,000, and your current plan) as distinct-colored balance lines, plus a table of payoff time, time saved, total interest, and interest saved per tier — with your current plan highlighted. Backed by a new `payoffLadder` calculation helper and unit tests.
+
 ## [0.4.0] - 2026-07-19
 
 ### Added
