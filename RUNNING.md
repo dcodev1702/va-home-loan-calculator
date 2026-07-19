@@ -46,6 +46,19 @@ install on the host but Docker itself.
 
 **Requirements:** Docker (https://docs.docker.com/get-docker/).
 
+### B1 — Pull the prebuilt image from Docker Hub (easiest)
+
+No cloning required. The image is published at
+[`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va):
+
+```bash
+docker run -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
+```
+
+Open http://localhost:3000. Pin a release with `:0.4.0` instead of `:latest`.
+
+### B2 — Build the image yourself from source
+
 ```bash
 # From the sentinel-va/ directory:
 docker compose up --build

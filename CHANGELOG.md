@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Added
 - Portable run options so anyone can run Sentinel VA locally: a `run.sh` one-command source launcher (Node 20+, no Docker), a multi-stage `Dockerfile` + `docker-compose.yml` that compile the native SQLite module in-image and persist scenarios via a `data/` volume, and a `RUNNING.md` guide covering both paths.
+- Published a prebuilt image to Docker Hub ([`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va)) and documented the pull-and-run one-liner in the README and RUNNING guide.
 
 ## [0.3.6] - 2026-07-19
 
