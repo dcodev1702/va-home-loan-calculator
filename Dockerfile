@@ -15,12 +15,19 @@ RUN npm run build
 
 # --- Runtime stage: minimal image that just runs the traced standalone server ---
 FROM node:26-bookworm-slim@sha256:2d49d876e96237d76de412761cf05dbfe5aee325cc4406a4d41d5824c5bb8beb AS runtime
-# Apply outstanding OS security patches on top of the pinned base, then remove
-# perl (flagged Essential by Debian but unused by the Node standalone runtime —
-# nothing installed depends on it) to eliminate the perl CVE surface, and strip
-# apt metadata so the layer stays small and no package manager cache ships.
+# Runtime hardening / attack-surface reduction. The standalone server runs as
+# `node server.js` and needs neither npm nor perl, so we strip both to remove
+# their CVE surface (e.g. undici ships only inside npm's own node_modules):
+#   1. apply outstanding OS security patches on the pinned base;
+#   2. purge perl-base (flagged Essential by Debian but unused — nothing installed
+#      depends on it) to clear the perl CVE surface;
+#   3. remove the bundled npm/npx (and thus its vendored undici);
+#   4. strip apt metadata so no package-manager cache ships.
+# NOTE: this is intentional SOP for THIS image — do NOT apt-install packages after
+# this step (perl is Essential) and keep the app free of any npm/perl runtime need.
 RUN apt-get update && apt-get upgrade -y \
     && dpkg --purge --force-remove-essential perl-base \
+    && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx \
     && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 WORKDIR /app

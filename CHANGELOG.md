@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.6.2] - 2026-07-19
+
+### Security
+- Removed the bundled `npm`/`npx` from the runtime image as part of the standard container-hardening purge. The standalone server runs as `node server.js` and needs no package manager at runtime; removing npm also removes its vendored `undici`, clearing the undici advisories (CVE-2026-48959, CVE-2026-48962, CVE-2026-12151) that were only reachable through npm's own dependencies. Perl removal (0.6.1) and OS security patching remain part of the same hardening step. Verified via image build, Node 26 boot, HTTP + database write/read/delete + storage round-trip, and a vulnerability rescan confirming the undici and perl findings are gone.
+
 ## [0.6.1] - 2026-07-19
 
 ### Security
