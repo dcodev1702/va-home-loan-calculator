@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.3.3] - 2026-07-18
+
+### Changed
+- Refined the affordability charts into glossy donut charts with a center total, soft depth, hover emphasis, and a cleaner glowing legend (same color scheme).
+
 ## [0.3.2] - 2026-07-18
 
 ### Changed

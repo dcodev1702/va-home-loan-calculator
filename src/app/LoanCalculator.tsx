@@ -32,13 +32,14 @@ function Metric({ label, value, tone = "default" }: { label: string; value: stri
 function PieChart({ title, segments }: { title: string; segments: { label: string; value: number; color: string }[] }) {
   const total = Math.max(segments.reduce((sum, segment) => sum + Math.max(segment.value, 0), 0), 1);
   const visibleSegments = segments.filter((segment) => segment.value > 0);
-  const arcs = visibleSegments.map((segment, index) => {
-    const percentage = segment.value / total; const start = visibleSegments.slice(0, index).reduce((sum, item) => sum + item.value / total, 0); const end = start + percentage;
-    const startAngle = start * Math.PI * 2 - Math.PI / 2; const endAngle = end * Math.PI * 2 - Math.PI / 2;
-    const x1 = 50 + 40 * Math.cos(startAngle); const y1 = 50 + 40 * Math.sin(startAngle); const x2 = 50 + 40 * Math.cos(endAngle); const y2 = 50 + 40 * Math.sin(endAngle);
-    return { ...segment, percent: percentage * 100, d: `M50 50 L${x1} ${y1} A40 40 0 ${percentage > .5 ? 1 : 0} 1 ${x2} ${y2} Z` };
+  const radius = 32; const circumference = 2 * Math.PI * radius;
+  const rings = visibleSegments.map((segment, index) => {
+    const percentage = segment.value / total;
+    const preceding = visibleSegments.slice(0, index).reduce((sum, item) => sum + item.value / total, 0);
+    return { ...segment, percent: percentage * 100, dash: percentage * circumference, gap: circumference - percentage * circumference, rotation: preceding * 360 - 90 };
   });
-  return <div className={styles.pieCard}><h3>{title}</h3><svg viewBox="0 0 100 100" role="img" aria-label={title}>{arcs.map((arc) => <path key={arc.label} d={arc.d} fill={arc.color}><title>{`${arc.label}: ${arc.percent.toFixed(1)}% (${usd.format(arc.value)})`}</title></path>)}</svg><div className={styles.pieLegend}>{arcs.map((arc) => <span key={arc.label}><i style={{ background: arc.color }} />{arc.label} <b>{arc.percent.toFixed(1)}%</b></span>)}</div><p>Hover a slice to inspect its percentage and dollar amount.</p></div>;
+  const gradientId = `pie-${title.replace(/[^a-z0-9]/gi, "")}`;
+  return <div className={styles.pieCard}><h3>{title}</h3><div className={styles.pieBody}><svg viewBox="0 0 100 100" role="img" aria-label={title}><defs><radialGradient id={`${gradientId}-gloss`} cx="42%" cy="34%" r="72%"><stop offset="0%" stopColor="#fff" stopOpacity="0.28" /><stop offset="45%" stopColor="#fff" stopOpacity="0.05" /><stop offset="100%" stopColor="#000" stopOpacity="0.22" /></radialGradient><filter id={`${gradientId}-shadow`} x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1.4" stdDeviation="1.6" floodColor="#04070d" floodOpacity="0.55" /></filter></defs><g filter={`url(#${gradientId}-shadow)`}>{rings.map((ring) => <circle key={ring.label} cx="50" cy="50" r={radius} fill="none" stroke={ring.color} strokeWidth="15" strokeDasharray={`${ring.dash} ${ring.gap}`} strokeDashoffset="0" transform={`rotate(${ring.rotation} 50 50)`}><title>{`${ring.label}: ${ring.percent.toFixed(1)}% (${usd.format(ring.value)})`}</title></circle>)}</g><circle cx="50" cy="50" r={radius} fill="none" stroke={`url(#${gradientId}-gloss)`} strokeWidth="15" /><text x="50" y="48" textAnchor="middle" className={styles.pieCenterValue}>{usd.format(total)}</text><text x="50" y="59" textAnchor="middle" className={styles.pieCenterLabel}>total</text></svg></div><div className={styles.pieLegend}>{rings.map((ring) => <span key={ring.label}><i style={{ background: ring.color }} />{ring.label} <b>{ring.percent.toFixed(1)}%</b></span>)}</div><p>Hover a slice to inspect its percentage and dollar amount.</p></div>;
 }
 
 function BalanceChart({ baseline, accelerated, initialBalance }: { baseline: { month: number; balance: number }[]; accelerated: { month: number; balance: number }[]; initialBalance: number }) {
