@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.4] - 2026-07-19
+
+### Added
+- Added a "Sweet-spot comparison" screenshot to the README (under the extra-principal payoff image), showing the multi-tier neon balance chart and the comparison table (Total/mo, Payoff, Time saved, Total interest paid, Interest saved). Extended `capture-screenshots.mjs` to generate it and pointed the script's output at the renamed `docs/images/` directory.
+
 ## [0.7.3] - 2026-07-19
 
 ### Changed

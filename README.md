@@ -31,6 +31,10 @@ A private, local-first VA home-loan planning workspace built with Next.js, TypeS
 
 ![Sentinel VA payoff workspace with neon scenario actions, balance chart, and annual savings table](docs/images/payoff-analysis.png)
 
+### Sweet-spot comparison
+
+![Sentinel VA sweet-spot comparison chart and table across extra-payment tiers, showing total monthly payment, payoff time, total interest paid, and interest saved per tier](docs/images/sweet-spot-comparison.png)
+
 ## Tech stack
 
 - Next.js App Router
