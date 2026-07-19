@@ -61,7 +61,7 @@ layer, one JSON API route, and a component-composed client UI.
 
 ## 3. System architecture
 
-![image](screenshots/high-level-topology.png)
+![image](docs/screenshots/high-level-topology.png)
 
 
 ### 3.2 Request/data flow
