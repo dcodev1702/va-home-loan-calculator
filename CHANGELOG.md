@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.5] - 2026-07-19
+
+### Changed
+- Switched the Next.js build to standalone output (`output: 'standalone'`) and slimmed the Docker runtime stage to copy only the traced server bundle, `.next/static`, and `public/` — cutting the image from ~995MB to ~404MB. The `better-sqlite3` native binary is explicitly traced via `outputFileTracingIncludes` and the container now starts with `node server.js` instead of `npm start`.
+- Runtime image now applies outstanding OS security patches (`apt-get upgrade`) on top of the digest-pinned base, while the C/C++ build toolchain remains confined to the build stage only.
+
 ## [0.5.4] - 2026-07-19
 
 ### Added
