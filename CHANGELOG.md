@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.2.5] - 2026-07-18
+
+### Added
+- Rename and delete controls for saved local scenarios, backed by SQLite PATCH and DELETE operations.
+
 ## [0.2.4] - 2026-07-18
 
 ### Changed

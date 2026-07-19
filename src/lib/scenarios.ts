@@ -22,6 +22,17 @@ export function listScenarios(): SavedScenario[] {
   });
 }
 
+export function renameScenario(id: number, name: string): SavedScenario | undefined {
+  const result = sqlite.prepare("UPDATE scenarios SET name = ? WHERE id = ?").run(name.trim().slice(0, 80), id);
+  if (result.changes === 0) return undefined;
+  const row = sqlite.prepare("SELECT id, name, payload, created_at AS createdAt FROM scenarios WHERE id = ?").get(id) as { id: number; name: string; payload: string; createdAt: string };
+  return { ...row, payload: JSON.parse(row.payload) };
+}
+
+export function deleteScenario(id: number): boolean {
+  return sqlite.prepare("DELETE FROM scenarios WHERE id = ?").run(id).changes > 0;
+}
+
 export function createScenario(name: string, payload: unknown): SavedScenario {
   const result = sqlite.prepare("INSERT INTO scenarios (name, payload) VALUES (?, ?)").run(name.trim().slice(0, 80), JSON.stringify(payload));
   const row = sqlite.prepare("SELECT id, name, payload, created_at AS createdAt FROM scenarios WHERE id = ?").get(result.lastInsertRowid) as { id: number; name: string; payload: string; createdAt: string };
