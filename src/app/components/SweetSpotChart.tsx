@@ -14,6 +14,8 @@ export default function SweetSpotChart({ ladder, initialBalance, currentExtra }:
     const points = semiannualBalanceTimeline(rung.entries, 2026, initialBalance);
     return points.map((point) => `${(point.month / span) * 100},${92 - (point.balance / max) * 78}`).join(" ");
   };
+  // Year axis from the baseline (longest) timeline, positioned by month so ticks line up with the time-scaled lines.
+  const axisPoints = semiannualBalanceTimeline(ladder[0]?.entries ?? [], 2026, initialBalance);
   const label = (extra: number) => (extra <= 0 ? "Baseline" : `+${usd.format(extra)}/mo`);
   return (
     <div className={styles.sweetSpot}>
@@ -33,6 +35,7 @@ export default function SweetSpotChart({ ladder, initialBalance, currentExtra }:
             <polyline key={rung.extraMonthly} points={line(rung)} className={styles.ladderLine} style={{ stroke: TIER_COLORS[index % TIER_COLORS.length], strokeWidth: rung.extraMonthly === currentExtra ? 3 : 2 }} />
           ))}
         </svg>
+        <div className={styles.axis}>{axisPoints.map((point) => <span key={point.month} style={{ left: `${(point.month / span) * 100}%` }} title={point.label}><i>|</i>{point.isYearStart ? point.axisLabel : ""}</span>)}</div>
         <p className={styles.chartCaption}>Remaining balance by extra-payment tier; ★ marks your current plan.</p>
       </div>
       <div className={styles.tableWrap}>

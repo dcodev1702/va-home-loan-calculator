@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.1] - 2026-07-19
+
+### Changed
+- Sweet-spot comparison chart now uses the same linear calendar-year axis as the payoff chart above it, so payoff timing is readable in years directly on the graph.
+- Trimmed the comparison tiers to the meaningful set: baseline, +$1,000, +$2,000, and +$2,500 (removed the +$250 and +$500 rungs), plus your current plan.
+
 ## [0.5.0] - 2026-07-19
 
 ### Added

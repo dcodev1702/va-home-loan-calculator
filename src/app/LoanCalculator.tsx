@@ -31,8 +31,8 @@ export default function LoanCalculator() {
   const [showLadder, setShowLadder] = useState(false);
   const result = useMemo(() => calculateLoan(loan), [loan]);
   const ladder = useMemo(() => {
-    // Fixed tiers plus the user's current extra, de-duped and sorted, capped for a readable chart.
-    const tiers = [0, 250, 500, 1000, 2000, loan.extraMonthly].filter((value) => value >= 0);
+    // Baseline anchor + a few aggressive tiers + the user's current extra, de-duped and sorted.
+    const tiers = [0, 1000, 2000, 2500, loan.extraMonthly].filter((value) => value >= 0);
     const extras = Array.from(new Set(tiers)).sort((a, b) => a - b);
     return payoffLadder(result.financedLoan, loan.interestRate, Math.max(0, Math.round(loan.termYears * 12)), extras);
   }, [result.financedLoan, loan.interestRate, loan.termYears, loan.extraMonthly]);

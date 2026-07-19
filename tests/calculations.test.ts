@@ -114,22 +114,22 @@ describe("VA loan calculation", () => {
 
   it("builds a payoff ladder anchored to the zero-extra baseline", () => {
     const P = 500000, rate = 5.5, months = 360;
-    const ladder = payoffLadder(P, rate, months, [0, 250, 2500]);
-    expect(ladder.map((r) => r.extraMonthly)).toEqual([0, 250, 2500]);
+    const ladder = payoffLadder(P, rate, months, [0, 1000, 2000, 2500]);
+    expect(ladder.map((r) => r.extraMonthly)).toEqual([0, 1000, 2000, 2500]);
     // Baseline rung: no savings, ~30-year payoff.
     expect(ladder[0].interestSaved).toBe(0);
     expect(ladder[0].monthsSaved).toBe(0);
     expect(ladder[0].months).toBe(360);
     // Each higher tier saves strictly more interest and pays off sooner.
     expect(ladder[1].interestSaved).toBeGreaterThan(0);
-    expect(ladder[2].interestSaved).toBeGreaterThan(ladder[1].interestSaved);
-    expect(ladder[2].months).toBeLessThan(ladder[1].months);
+    expect(ladder[3].interestSaved).toBeGreaterThan(ladder[1].interestSaved);
+    expect(ladder[3].months).toBeLessThan(ladder[1].months);
     // +$2,500/mo on $500k @ 5.5% -> ~123 months and ~$367k saved (matches the app).
-    expect(ladder[2].months).toBe(123);
-    expect(ladder[2].interestSaved).toBeCloseTo(367289, -2);
+    expect(ladder[3].months).toBe(123);
+    expect(ladder[3].interestSaved).toBeCloseTo(367289, -2);
     // A ladder rung matches a direct calculateLoan run at the same extra.
     const direct = calculateLoan({ purchasePrice: P, downPayment: 0, interestRate: rate, termYears: 30, propertyTaxAnnual: 0, insuranceAnnual: 0, hoaMonthly: 0, fundingFeeExempt: true, priorVaUse: false, extraMonthly: 2500, annualLumpSum: 0 });
-    expect(ladder[2].interestSaved).toBeCloseTo(direct.interestSaved, 2);
+    expect(ladder[3].interestSaved).toBeCloseTo(direct.interestSaved, 2);
   });
 
   it("creates semiannual balance points with one calendar-year label per year", () => {
