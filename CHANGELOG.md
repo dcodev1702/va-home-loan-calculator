@@ -4,6 +4,14 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.9] - 2026-07-19
+
+### Added
+- Added `ARCHITECTURE.md`, a comprehensive architecture and design reference covering the system topology, calculation engine, persistence and storage-cap design, API surface, UI component model, design system, build/runtime/deployment, operational procedures, and the security model.
+
+### Changed
+- Renamed the sweet-spot comparison table's fifth column header from "Total interest" to "Total interest paid" for clarity.
+
 ## [0.5.8] - 2026-07-19
 
 ### Added

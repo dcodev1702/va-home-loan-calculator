@@ -51,7 +51,7 @@ export default function SweetSpotChart({ ladder, initialBalance, currentExtra, b
       </div>
       <div className={styles.tableWrap}>
         <table>
-          <thead><tr><th>Extra / month</th><th>Total / mo</th><th>Payoff</th><th>Time saved</th><th>Total interest</th><th>Interest saved</th></tr></thead>
+          <thead><tr><th>Extra / month</th><th>Total / mo</th><th>Payoff</th><th>Time saved</th><th>Total interest paid</th><th>Interest saved</th></tr></thead>
           <tbody>
             {ladder.map((rung) => (
               <tr key={rung.extraMonthly} className={rung.extraMonthly === currentExtra ? styles.ladderCurrent : undefined}>
