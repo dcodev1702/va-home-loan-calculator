@@ -66,6 +66,18 @@ mkdir -p data && docker run -d --user 1000:1000 --security-opt no-new-privileges
 
 Open http://localhost:3000. The `-v` mount persists saved scenarios in `./data/` on the host between runs, while `--user`, `--security-opt`, and `--cap-drop` keep the app running with the same non-root hardening used by the compose file. Use `:latest` to always pull the newest build (the app and image are updated frequently).
 
+## Share temporarily with Cloudflare Tunnel
+
+For a short-lived public demo, run Sentinel VA locally or from Docker and confirm http://localhost:3000 opens on the host. Then start a quick Cloudflare Tunnel in a second terminal:
+
+```bash
+cloudflared tunnel --url http://localhost:3000
+```
+
+Cloudflare prints a temporary `https://...trycloudflare.com` URL that can be sent to someone else. The link stays available while the app/container, the host machine, and the `cloudflared` command are all still running. Stop sharing by pressing `Ctrl+C` in the tunnel terminal.
+
+Treat the generated URL as public: anyone with the link can reach the app unless you add authentication in front of it. Avoid sharing personal saved scenarios or sensitive financial data through a temporary tunnel.
+
 ## Quality checks
 
 ```bash
@@ -82,6 +94,10 @@ Saved scenarios are stored in `data/sentinel-va.db` on the machine running the a
 
 - `PRODUCT_SPEC.md` — feature and engineering specification.
 - `DESIGN.md` — visual-system tokens and UX rules.
+
+## Operational resources
+
+- [Cloudflare Tunnel quick tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/) - install `cloudflared` and create temporary `trycloudflare.com` URLs for local apps.
 
 ## Learning resources
 

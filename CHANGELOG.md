@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.3] - 2026-07-19
+
+### Added
+- Documented how to share a local or Docker-hosted Sentinel VA instance temporarily with Cloudflare Tunnel, including the quick tunnel command, public-link caveats, and the official Cloudflare quick tunnel resource.
+
 ## [0.5.2] - 2026-07-19
 
 ### Security
