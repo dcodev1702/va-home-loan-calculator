@@ -61,7 +61,7 @@ To hand this to someone else to run on their own machine — from source or via 
 A prebuilt image is published at [`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va). No cloning or Node.js required — just Docker:
 
 ```bash
-docker run -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
+docker run -d -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
 ```
 
 Open http://localhost:3000. The `-v` mount persists saved scenarios in `./data/` on the host between runs. Pin a specific release with `:0.4.0` instead of `:latest`.
