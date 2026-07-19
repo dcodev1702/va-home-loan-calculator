@@ -17,19 +17,19 @@ A private, local-first VA home-loan planning workspace built with Next.js, TypeS
 
 ### Financial overview and affordability mix
 
-![Sentinel VA dashboard overview with payment metrics and affordability pie charts](docs/screenshots/dashboard-overview.png)
+![Sentinel VA dashboard overview with payment metrics and affordability pie charts](docs/images/dashboard-overview.png)
 
 ### Loan setup and household income
 
-![Sentinel VA loan payment and household income workspace](docs/screenshots/loan-income.png)
+![Sentinel VA loan payment and household income workspace](docs/images/loan-income.png)
 
 ### Budget, liabilities, residual income, and DTI
 
-![Sentinel VA monthly budget and residual-income workspace](docs/screenshots/affordability.png)
+![Sentinel VA monthly budget and residual-income workspace](docs/images/affordability.png)
 
 ### Extra-principal payoff strategy
 
-![Sentinel VA payoff workspace with neon scenario actions, balance chart, and annual savings table](docs/screenshots/payoff-analysis.png)
+![Sentinel VA payoff workspace with neon scenario actions, balance chart, and annual savings table](docs/images/payoff-analysis.png)
 
 ## Tech stack
 

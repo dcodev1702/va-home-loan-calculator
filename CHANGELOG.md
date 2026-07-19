@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.3] - 2026-07-19
+
+### Changed
+- Renamed the `docs/screenshots/` directory to `docs/images/` and updated every dependent reference (README.md, ARCHITECTURE.md, and `.dockerignore`).
+- Made all documentation consistently reference port 3000: `run.sh` and RUNNING.md previously used `4000` in their port-override examples; these now use the default 3000. (No behavior change — the app already defaulted to 3000.)
+
 ## [0.7.2] - 2026-07-19
 
 ### Changed

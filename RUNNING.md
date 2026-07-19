@@ -25,7 +25,7 @@ cd va-home-loan-calculator/sentinel-va   # adjust if your layout differs
 ./run.sh
 ```
 
-Then open http://localhost:3000. Use `PORT=4000 ./run.sh` to change the port.
+Then open http://localhost:3000. The port defaults to 3000; set `PORT=3000 ./run.sh` to make it explicit.
 Stop with Ctrl+C. Saved scenarios persist in `./data/sentinel-va.db`.
 
 Prefer the raw npm commands? They're all `run.sh` does:
@@ -33,7 +33,7 @@ Prefer the raw npm commands? They're all `run.sh` does:
 ```bash
 npm ci        # or: npm install
 npm run build
-npm run start # add: -- --port 4000  to change the port
+npm run start # serves on http://localhost:3000
 ```
 
 ---

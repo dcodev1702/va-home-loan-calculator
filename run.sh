@@ -3,7 +3,7 @@
 # with Node.js 20+ installed. No Docker required.
 #
 #   ./run.sh          # install (first run), build, and start on http://localhost:3000
-#   PORT=4000 ./run.sh  # start on a different port
+#   PORT=3000 ./run.sh  # explicitly set the port (3000 is the default)
 #
 # Saved scenarios persist in ./data/sentinel-va.db next to this script.
 set -euo pipefail
