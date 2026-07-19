@@ -1,7 +1,9 @@
 services:
   sentinel-va:
     build: .
-    user: "1000:1000"
+    # The distroless runtime image runs as the built-in nonroot user (uid 65532).
+    # The bind-mounted ./data must be writable by that uid: `sudo chown -R 65532:65532 ./data`.
+    user: "65532:65532"
     security_opt:
       - no-new-privileges:true
     cap_drop:

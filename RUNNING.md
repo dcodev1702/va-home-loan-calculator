@@ -48,11 +48,15 @@ install on the host but Docker itself.
 
 ### B1 — Pull the prebuilt image from Docker Hub (easiest)
 
-No cloning required. The image is published at
-[`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va):
+No cloning required. The image is a hardened **distroless** build that runs as the
+built-in nonroot user (uid 65532), published at
+[`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va). The
+host data directory must be owned by that uid so saved scenarios can be written:
 
 ```bash
-docker run -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
+mkdir -p data && sudo chown -R 65532:65532 data
+docker run -d --user 65532:65532 --security-opt no-new-privileges:true --cap-drop ALL \
+  -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
 ```
 
 Open http://localhost:3000. Use `:latest` to always pull the newest build (the app and image are updated frequently).
@@ -67,11 +71,14 @@ docker compose up --build
 Open http://localhost:3000. Saved scenarios persist in `./data/` on the host
 (mounted as a volume), so they survive `docker compose down` and restarts.
 
-Plain Docker without Compose works too:
+Plain Docker without Compose works too (the image runs as nonroot uid 65532, so the
+data dir must be owned by it):
 
 ```bash
 docker build -t sentinel-va .
-docker run -p 3000:3000 -v "$(pwd)/data:/app/data" sentinel-va
+mkdir -p data && sudo chown -R 65532:65532 data
+docker run -d --user 65532:65532 --security-opt no-new-privileges:true --cap-drop ALL \
+  -p 3000:3000 -v "$(pwd)/data:/app/data" sentinel-va
 ```
 
 ---

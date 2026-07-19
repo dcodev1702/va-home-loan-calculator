@@ -2,7 +2,7 @@
 
 > A comprehensive architecture and design reference for **Sentinel VA**, a
 > local-first VA home-loan planning application. This document is derived from the
-> codebase at version **0.6.3** and the full project CHANGELOG. It covers system
+> codebase at version **0.7.1** and the full project CHANGELOG. It covers system
 > architecture, the domain/calculation engine, data & persistence, the API surface,
 > the UI component model, the design system, the build/runtime/deployment topology,
 > operational procedures, and the security model.
@@ -49,9 +49,10 @@ first-class UI element and a design principle.
 | Styling          | CSS Modules + one globals.css   | No CSS framework; hand-authored tokens |
 | Test runner      | **Vitest 4**                    | Pure-function unit tests |
 | Lint             | **ESLint 9** + eslint-config-next | |
-| Runtime image    | **node:26-bookworm-slim** (digest-pinned) | Debian/glibc for native module |
-| Runtime hardening| npm/npx + perl purged; OS patched         | Minimal attack surface (see §9.3) |
-| Container user   | non-root `node`, `--cap-drop ALL`, `no-new-privileges` | |
+| Build base       | **node:24-bookworm-slim** (digest-pinned) | Debian/glibc; compiles the native module |
+| Runtime image    | **gcr.io/distroless/nodejs24-debian12:nonroot** (digest-pinned) | Distroless: no shell/apt/npm/perl/tar |
+| Runtime hardening | patched Node 24.18.0 overlay; nonroot uid 65532 | Minimal attack surface (see §9.3) |
+| Container user   | nonroot **uid 65532**, `--cap-drop ALL`, `no-new-privileges` | |
 
 The stack is deliberately small: a typed calculation core, a thin SQLite persistence
 layer, one JSON API route, and a component-composed client UI.
@@ -334,58 +335,66 @@ deferred-hydration pattern that eliminated React hydration warnings — see CHAN
 ## 9. Build, runtime & deployment
 
 ### 9.1 Multi-stage Docker build (`Dockerfile`)
-- **Build stage:** digest-pinned `node:26-bookworm-slim`; installs the C/C++
+- **Build stage:** digest-pinned `node:24-bookworm-slim`; installs the C/C++
   toolchain (`python3 make g++`) **only here** to compile `better-sqlite3`; runs
-  `next build` with `output: "standalone"`.
-- **Runtime stage:** same digest-pinned base; a single hardening layer applies OS CVE
-  patches (`apt-get upgrade`) and **purges `perl-base` and the bundled `npm`/`npx`**
-  (see §9.3); copies **only** the traced standalone bundle + `.next/static` +
-  `public/`; runs as non-root `node`; starts with `CMD ["node", "server.js"]`.
-- **Result:** ~404 MB class image (down from ~1.26 GB pre-hardening), toolchain and
-  package manager absent from runtime, native `.node` binary explicitly traced via
-  `outputFileTracingIncludes`.
+  `next build` with `output: "standalone"`; and pre-creates `/app/data` owned by
+  uid 65532 (the runtime has no shell to chown it later). Node 24 is chosen so the
+  native-module ABI matches the distroless runtime family (distroless publishes
+  nodejs22/nodejs24, not nodejs26).
+- **Runtime stage:** a **distroless** base
+  (`gcr.io/distroless/nodejs24-debian12:nonroot`, digest-pinned) — no shell, apt,
+  dpkg, npm, perl, or tar. It copies the build stage's **patched `node` binary**
+  (24.18.0) over distroless's older 24.14.0, then copies **only** the traced
+  standalone bundle + `.next/static` + `public/` + the prepared `data/` dir (all
+  `--chown=65532:65532`). ENTRYPOINT is already `["node"]`, so `CMD ["server.js"]`.
+- **Result:** ~281 MB on-disk / ~112 MB image (down from ~1.26 GB pre-hardening),
+  no OS package layer to speak of, native `.node` binary explicitly traced via
+  `outputFileTracingIncludes`, and Docker Scout reporting no vulnerabilities.
 
 ### 9.2 Next.js standalone specifics
 `next.config.ts` sets `output: "standalone"` and
 `outputFileTracingIncludes: { "/**": ["./node_modules/better-sqlite3/build/Release/*.node"] }`
 — file-tracing otherwise misses native binaries. `process.cwd()`-based DB path still
-resolves to `/app/data` under `node server.js`.
+resolves to `/app/data` under the standalone server.
 
 ### 9.3 Runtime hardening & attack-surface reduction
-Non-root `node` user, `--cap-drop ALL`, `--security-opt no-new-privileges:true`,
-digest-pinned base, and the writable `/app/data` volume. Mirrored in
-`docker-compose.yml` (`user: "1000:1000"`, `cap_drop: ALL`, `no-new-privileges`,
-`restart: unless-stopped`).
+The runtime is a **distroless image** — attack surface is minimized by *construction*
+rather than by post-hoc purging:
+- **No shell, no package manager (apt/dpkg), no npm/npx, no perl, no tar.** Whole
+  CVE classes for those packages are simply absent (this is what eliminated the perl,
+  npm/undici, and tar CVEs — including CVE-2025-45582 — that earlier Debian-based
+  images had to purge or accept).
+- **Nonroot by default (uid 65532).** Combined with `--cap-drop ALL` and
+  `--security-opt no-new-privileges:true`. The live container runs `--user
+  65532:65532`; the host data volume must be `chown`ed to 65532. Mirrored in
+  `docker-compose.yml` (`user: "65532:65532"`).
+- **Patched Node overlay.** Distroless lags the Node runtime (shipped 24.14.0), so
+  the build base's patched `node` (24.18.0) is copied in — clearing node-runtime CVEs
+  fixed in 24.14.1/24.17.0 (e.g. CVE-2026-21710, CVE-2026-21637). The binary's only
+  dynamic deps (libstdc++/libm/libgcc_s/libc) already exist in distroless-debian12,
+  so the drop-in is safe. Re-check the build-base Node version each release and keep
+  the overlay current.
 
-The runtime stage additionally runs a **mandatory hardening purge** in one layer,
-because the standalone server (`node server.js`) needs neither a package manager nor
-perl:
-1. `apt-get update && apt-get upgrade -y` — OS security patches on the pinned base.
-2. `dpkg --purge --force-remove-essential perl-base` — perl is Debian-Essential but
-   unused (nothing installed depends on it); removing it clears the perl CVE surface.
-3. `rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx` —
-   removes npm/npx **and its vendored `undici`** (the only copy in the image),
-   clearing the undici advisories.
-4. `rm -rf /var/lib/apt/lists/*` — no package-manager cache ships.
+Each release is scanned (grype/Docker Scout) and the app is smoke-tested against the
+distroless image (HTTP + DB write/read/delete + storage round-trip) using
+`--user 65532:65532` and HTTP-only checks (no shell to exec into).
 
-Because perl is Essential, **nothing may be `apt-get install`ed after this step**, and
-the app must stay free of any npm/perl runtime dependency. Each release is scanned
-with **grype** and must show zero `npm`/`undici`/`perl` findings.
-
-**Residual base-OS CVEs:** several glibc/ncurses/etc. findings are marked "won't fix"
-by Debian and are already on the latest bookworm build (e.g. libc6
-`2.36-9+deb12u14`) — there is no newer package to move to on bookworm. These are an
-upstream-distro limitation, not a patchable gap; clearing them would require a
-base-image family change (newer Debian/Ubuntu once patched, or a distroless/chiseled
-base).
+**Base-OS patch cadence (accepted trade-off):** distroless has **no apt**, so its
+glibc/libssl packages cannot be patched in-image — they track Google's distroless
+rebuild cadence rather than same-day Debian point releases. Updates are adopted
+deliberately by bumping the pinned digest when a fresher distroless build lands
+(Dependabot watches it — §9.4). This is the conscious cost of the far smaller,
+shell-less, package-manager-less attack surface.
 
 ### 9.4 Supply-chain
-Base image pinned by SHA-256 digest in every stage for reproducibility. A Dependabot
-config (`.github/dependabot.yml`, `package-ecosystem: docker`) watches the pinned
-digest and opens a PR when the upstream tag advances. **Policy:** these PRs are not
-merged directly (Dependabot branches from an older commit and would revert newer
-work) — the digest bump is reapplied onto fresh `main`, validated, released, and the
-PR closed. This is how the Node 22→26 upgrade (v0.6.0) was handled.
+Both base images are pinned by SHA-256 digest in every stage for reproducibility. A
+Dependabot config (`.github/dependabot.yml`, `package-ecosystem: docker`) watches
+**both** the `node:24-bookworm-slim` build base and the
+`gcr.io/distroless/nodejs24-debian12` runtime base, opening a PR when either upstream
+tag resolves to a new digest. **Policy:** these PRs are not merged directly
+(Dependabot branches from an older commit and would revert newer work) — the digest
+bump is reapplied onto fresh `main`, validated, released, and the PR closed. This is
+how the Node 22→26 base bump (v0.6.0) was handled before the distroless migration.
 
 ### 9.5 Local run paths
 - **Source:** `run.sh` (Node 20+, no Docker).
@@ -439,11 +448,12 @@ URL — deferred for security/hygiene reasons.)
   database, session, or third-party call in the app runtime.
 - **Non-underwriting stance.** The app never renders an approval decision; residual
   and DTI are labeled planning heuristics.
-- **Container hardening.** Non-root, all Linux capabilities dropped,
-  `no-new-privileges`, digest-pinned + OS-patched base, and a minimal standalone
-  runtime surface with **no toolchain, no package manager (npm/npx purged), no perl,
-  and no source**. Each release is grype-scanned to confirm zero npm/undici/perl
-  findings. Residual base-OS ("won't fix") CVEs are tracked honestly (§9.3).
+- **Container hardening.** Distroless runtime — nonroot (uid 65532), all Linux
+  capabilities dropped, `no-new-privileges`, digest-pinned base — with **no shell, no
+  package manager, no toolchain, no npm/perl/tar, and no source**. Whole CVE classes
+  are absent by construction. Each release is scanned (grype + Docker Scout); the
+  current image reports no vulnerabilities. The distroless glibc/libssl patch cadence
+  is an accepted trade-off (§9.3), adopted deliberately via pinned-digest bumps.
 - **Bounded persistence.** Two-layer storage cap prevents a runaway or malicious
   write from filling the host disk.
 - **Ephemeral exposure.** The public URL is a rotating quick tunnel, not a stable
@@ -457,12 +467,13 @@ URL — deferred for security/hygiene reasons.)
   logic (`scenarios.test.ts`): loan math, the VA funding-fee table across every
   down-payment tier and first-vs-subsequent use, amortization invariants, and the
   payoff-timeline axis invariants.
-- **Release-time validation** additionally exercises the built image: HTTP health,
+- **Release-time validation** additionally exercises the built image (run as
+  `--user 65532:65532`, HTTP-only — the distroless image has no shell): HTTP health,
   a real DB write→read→delete round-trip (proves the native module is traced under
-  standalone **and on the current Node major**), the storage-full 507 path (via
-  `STORAGE_LIMIT_BYTES` override), a hardening check that npm/npx/perl/undici are
-  absent, a **grype vulnerability scan**, and — for visual changes — computed-style
-  inspection in a headless browser.
+  standalone **and loads on the overlaid Node binary**), the storage-full 507 path
+  (via `STORAGE_LIMIT_BYTES` override), the correct Node version on the overlay, a
+  **grype / Docker Scout vulnerability scan**, and — for visual changes —
+  computed-style inspection in a headless browser.
 
 ---
 
@@ -475,9 +486,12 @@ acceleration lab (0.5.0–0.5.1), Docker hardening → non-root → digest-pin �
 prune → standalone (0.5.2–0.5.5), sweet-spot enhancements — Total/mo column, +$1,500
 tier, value-based colors, neon glow (0.5.6–0.5.7), the 1 GB storage cap + banner
 (0.5.8), an ARCHITECTURE.md + column-label clarity (0.5.9), the base-image upgrade to
-Node 26 (0.6.0), and CVE-driven attack-surface reduction — perl removal (0.6.1) and
-npm/undici removal (0.6.2). The trajectory is consistent: **transparent math first,
-then progressively harden and bound the delivery**.
+Node 26 (0.6.0), CVE-driven attack-surface reduction — perl removal (0.6.1) and
+npm/undici removal (0.6.2) — and finally the **distroless migration** (0.7.1): a
+Node-24 distroless runtime with a patched-Node overlay that eliminated the shell,
+package manager, perl, npm, and tar entirely, taking the image from ~1.26 GB to
+~112 MB with a clean vulnerability scan. The trajectory is consistent: **transparent
+math first, then progressively harden and bound the delivery**.
 
 ---
 

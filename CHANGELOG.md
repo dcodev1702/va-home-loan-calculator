@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.2] - 2026-07-19
+
+### Changed
+- Updated all repository documentation to reflect the distroless migration (0.7.1): `ARCHITECTURE.md` (base images, build/runtime sections, hardening model, supply-chain, security, testing, evolution), `README.md` and `RUNNING.md` (run instructions now use `--user 65532:65532` with a `chown` note for the data volume), `docker-compose.yml` (`user: "65532:65532"`), and the Dependabot comment (now notes it watches both the node:24 build base and the distroless runtime base).
+
 ## [0.7.1] - 2026-07-19
 
 ### Changed

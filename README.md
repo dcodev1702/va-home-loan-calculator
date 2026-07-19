@@ -58,10 +58,11 @@ To hand this to someone else to run on their own machine — from source or via 
 
 ## Run from Docker Hub
 
-A prebuilt image is published at [`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va). No cloning or Node.js required — just Docker:
+A prebuilt image is published at [`digitalkali/sentinel-va`](https://hub.docker.com/r/digitalkali/sentinel-va). No cloning or Node.js required — just Docker. The image is a hardened **distroless** build (no shell, package manager, perl, npm, or tar) that runs as the built-in nonroot user (uid 65532), so the host data directory must be owned by that uid:
 
 ```bash
-mkdir -p data && docker run -d --user 1000:1000 --security-opt no-new-privileges:true --cap-drop ALL -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
+mkdir -p data && sudo chown -R 65532:65532 data
+docker run -d --user 65532:65532 --security-opt no-new-privileges:true --cap-drop ALL -p 3000:3000 -v "$(pwd)/data:/app/data" digitalkali/sentinel-va:latest
 ```
 
 Open http://localhost:3000. The `-v` mount persists saved scenarios in `./data/` on the host between runs, while `--user`, `--security-opt`, and `--cap-drop` keep the app running with the same non-root hardening used by the compose file. Use `:latest` to always pull the newest build (the app and image are updated frequently).
