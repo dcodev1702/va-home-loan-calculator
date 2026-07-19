@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.2.7] - 2026-07-18
+
+### Changed
+- Moved the compact saved-scenario selector above the payoff graph and constrained its width for better payoff-workflow context.
+
 ## [0.2.6] - 2026-07-18
 
 ### Changed
