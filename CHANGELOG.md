@@ -4,6 +4,15 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.3.5] - 2026-07-19
+
+### Changed
+- Brightened and thickened the payoff comparison chart lines (rounded caps/joins, a subtle glow, and matching legend dots) for sharper baseline-vs-accelerated readability.
+- Refreshed all four README screenshots to match the current UI.
+
+### Added
+- Exhaustive unit coverage for the VA funding-fee rate chart (first vs. subsequent use across every down-payment tier, boundary values, and the financed-fee path), documented against the official VA table effective 2023-04-07.
+
 ## [0.3.4] - 2026-07-18
 
 ### Added
