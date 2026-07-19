@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.8] - 2026-07-19
+
+### Added
+- Enforced a 1 GB cap on the local SQLite data volume (`/app/data`): scenario saves are refused once the on-disk footprint reaches the limit (HTTP 507), preventing the mounted volume from growing unbounded. The limit is overridable via the `STORAGE_LIMIT_BYTES` environment variable.
+- Added a red banner with yellow text that appears when the database is full, informing the user the 1 GB limit has been reached and to delete saved scenarios to free space. The `/api/scenarios` endpoint now reports storage status so the banner surfaces on load and after a rejected save.
+
 ## [0.5.7] - 2026-07-19
 
 ### Changed

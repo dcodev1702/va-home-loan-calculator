@@ -1,9 +1,9 @@
-import { createScenario, deleteScenario, listScenarios, renameScenario } from "@/lib/scenarios";
+import { createScenario, deleteScenario, listScenarios, renameScenario, storageStatus, StorageFullError } from "@/lib/scenarios";
 
 export const runtime = "nodejs";
 
 export async function GET() {
-  return Response.json({ scenarios: listScenarios() });
+  return Response.json({ scenarios: listScenarios(), storage: storageStatus() });
 }
 
 export async function POST(request: Request) {
@@ -12,8 +12,11 @@ export async function POST(request: Request) {
     if (typeof body.name !== "string" || !body.name.trim() || body.payload === undefined) {
       return Response.json({ error: "A scenario name and payload are required." }, { status: 400 });
     }
-    return Response.json({ scenario: createScenario(body.name, body.payload) }, { status: 201 });
-  } catch {
+    return Response.json({ scenario: createScenario(body.name, body.payload), storage: storageStatus() }, { status: 201 });
+  } catch (error) {
+    if (error instanceof StorageFullError) {
+      return Response.json({ error: "Storage is full — the 1 GB local database limit has been reached. Delete saved scenarios to free space.", storage: storageStatus() }, { status: 507 });
+    }
     return Response.json({ error: "Unable to save this scenario." }, { status: 400 });
   }
 }
