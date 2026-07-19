@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.6.1] - 2026-07-19
+
+### Security
+- Removed `perl-base` from the runtime image to eliminate the perl CVE surface. Perl is flagged Essential by Debian but is unused by the Node standalone runtime (nothing installed depends on it), so it is purged after the OS security patch step. Verified the image still builds, boots on Node 26, and passes the HTTP + database write/read/delete + storage-status round-trip with perl absent. (The remaining `libpcre2-8-0` is the unrelated PCRE regex library, not perl.)
+
 ## [0.6.0] - 2026-07-19
 
 ### Changed
