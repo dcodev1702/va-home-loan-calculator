@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.4] - 2026-07-19
+
+### Changed
+- Pinned the Docker base image (`node:22-bookworm-slim`) by digest in both build and runtime stages for reproducible, tamper-resistant builds.
+- Pruned devDependencies from the runtime image via `npm prune --omit=dev` after the build, shrinking the shipped image while keeping the compiled `better-sqlite3` native module intact.
+
 ## [0.5.3] - 2026-07-19
 
 ### Added
