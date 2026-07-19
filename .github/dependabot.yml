@@ -1,0 +1,16 @@
+version: 2
+updates:
+  # Watch the Docker base image (node:22-bookworm-slim) pinned by digest in the
+  # Dockerfile. When the upstream tag resolves to a new digest, Dependabot opens
+  # a PR bumping the `FROM ...@sha256:` lines so the update is reviewed and CI-gated
+  # rather than pulled blindly.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "build"
+    labels:
+      - "dependencies"
+      - "docker"
+    open-pull-requests-limit: 5
