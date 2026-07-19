@@ -4,6 +4,15 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.6] - 2026-07-19
+
+### Added
+- Sweet-spot comparison table now includes a "Total / mo" column showing the full monthly out-of-pocket (total housing payment plus the tier's extra principal) for each acceleration tier.
+- Added a +$1,500/mo acceleration tier to the sweet-spot comparison (baseline / +$1,000 / +$1,500 / +$2,000 / +$2,500 / your current plan).
+
+### Changed
+- Sweet-spot tier colors are now value-based (each extra-payment amount owns a fixed hue) instead of position-based, so the palette stays stable as tiers or the current plan change: +$1,500 is pink and +$2,500 is neon green, with baseline amber, +$1,000 cyan, and +$2,000 purple retained.
+
 ## [0.5.5] - 2026-07-19
 
 ### Changed
