@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.6.3] - 2026-07-19
+
+### Changed
+- Refreshed `ARCHITECTURE.md` to the current state (v0.6.3): base image updated from `node:22-bookworm-slim` to `node:26-bookworm-slim` throughout, documented the mandatory runtime hardening purge (perl + npm/npx/undici removal, OS patching) and the grype scan step in the SOP, noted the honest handling of "won't fix" base-OS CVEs (e.g. glibc), recorded the Dependabot close-and-reapply policy, and extended the evolution timeline through 0.6.2.
+
 ## [0.6.2] - 2026-07-19
 
 ### Security
