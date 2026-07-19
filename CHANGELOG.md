@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.5.7] - 2026-07-19
+
+### Changed
+- Sweet-spot comparison chart lines now carry the same neon drop-shadow glow as the payoff chart above, with each tier glowing in its own hue (driven by `currentColor`) so the value-based palette stays intact.
+
 ## [0.5.6] - 2026-07-19
 
 ### Added

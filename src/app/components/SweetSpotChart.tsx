@@ -43,7 +43,7 @@ export default function SweetSpotChart({ ladder, initialBalance, currentExtra, b
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Remaining balance across extra-payment tiers">
           <line x1="0" y1="92" x2="100" y2="92" /><line x1="0" y1="53" x2="100" y2="53" /><line x1="0" y1="14" x2="100" y2="14" />
           {ladder.map((rung) => (
-            <polyline key={rung.extraMonthly} points={line(rung)} className={styles.ladderLine} style={{ stroke: tierColor(rung.extraMonthly), strokeWidth: rung.extraMonthly === currentExtra ? 3 : 2 }} />
+            <polyline key={rung.extraMonthly} points={line(rung)} className={styles.ladderLine} style={{ stroke: tierColor(rung.extraMonthly), color: tierColor(rung.extraMonthly), strokeWidth: rung.extraMonthly === currentExtra ? 3 : 2 }} />
           ))}
         </svg>
         <div className={styles.axis}>{axisPoints.map((point) => <span key={point.month} style={{ left: `${(point.month / span) * 100}%` }} title={point.label}><i>|</i>{point.isYearStart ? point.axisLabel : ""}</span>)}</div>
