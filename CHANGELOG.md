@@ -4,6 +4,12 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.7] - 2026-07-20
+
+### Changed
+- Renamed the README "Screenshots" section to "The Planning Workspace".
+- Added a conservative, theme-appropriate emoji to each top-level heading in README.md and ARCHITECTURE.md (one per section) as light wayfinding accents.
+
 ## [0.7.6] - 2026-07-20
 
 ### Changed

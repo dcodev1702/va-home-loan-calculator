@@ -9,7 +9,7 @@
 
 ---
 
-## 1. Product overview
+## 1. 📋 Product overview
 
 Sentinel VA is a **single-user, local-first financial planning workspace** for
 prospective VA home-loan borrowers. It answers three questions at a glance:
@@ -38,7 +38,7 @@ first-class UI element and a design principle.
 
 ---
 
-## 2. Technology stack
+## 2. 🧰 Technology stack
 
 | Layer            | Choice                          | Notes |
 |------------------|---------------------------------|-------|
@@ -59,7 +59,7 @@ layer, one JSON API route, and a component-composed client UI.
 
 ---
 
-## 3. System architecture
+## 3. 🏗️ System architecture
 
 ![image](docs/images/high-level-topology.png)
 
@@ -109,7 +109,7 @@ components but contains no financial math itself.
 
 ---
 
-## 4. Domain & calculation engine (`src/lib/calculations.ts`)
+## 4. 🧮 Domain & calculation engine (`src/lib/calculations.ts`)
 
 The engine is a set of **pure functions** over strongly-typed inputs. All monetary
 math is rounded through a single `money()` helper
@@ -173,7 +173,7 @@ Thresholds: ≤ 41% good, ≤ 46% warning, otherwise bad — surfaced as tone co
 
 ---
 
-## 5. Persistence layer (`src/lib/scenarios.ts`)
+## 5. 💾 Persistence layer (`src/lib/scenarios.ts`)
 
 The **only** module that performs I/O. Uses `better-sqlite3` (synchronous) with WAL
 journal mode. The database lives at `path.join(process.cwd(), "data",
@@ -208,7 +208,7 @@ Scenarios store the entire calculator state (`loan`, `incomes`, `budgets`,
 
 ---
 
-## 6. API surface (`src/app/api/scenarios/route.ts`)
+## 6. 🔌 API surface (`src/app/api/scenarios/route.ts`)
 
 A single Next.js route handler, `runtime = "nodejs"` (required — native module).
 
@@ -226,7 +226,7 @@ after a rejected save.
 
 ---
 
-## 7. Storage cap — two-layer design
+## 7. 📦 Storage cap — two-layer design
 
 A deliberate **defense-in-depth** bound on the persisted volume so it can never grow
 unbounded on the host.
@@ -254,7 +254,7 @@ re-migrate.
 
 ---
 
-## 8. UI architecture & design system
+## 8. 🎨 UI architecture & design system
 
 ### 8.1 Component model
 `LoanCalculator.tsx` is the single stateful client component; everything under
@@ -305,7 +305,7 @@ deferred-hydration pattern that eliminated React hydration warnings — see CHAN
 
 ---
 
-## 9. Build, runtime & deployment
+## 9. 🐳 Build, runtime & deployment
 
 ### 9.1 Multi-stage Docker build (`Dockerfile`)
 - **Build stage:** digest-pinned `node:24-bookworm-slim`; installs the C/C++
@@ -381,7 +381,7 @@ process restarts. A **daily rotation** (§10) intentionally churns it for hygien
 
 ---
 
-## 10. Operational procedures (SOP)
+## 10. ⚙️ Operational procedures (SOP)
 
 The full release/operate routine is codified in the `docker-image-release` skill.
 Summary:
@@ -415,7 +415,7 @@ URL — deferred for security/hygiene reasons.)
 
 ---
 
-## 11. Security & privacy model
+## 11. 🔒 Security & privacy model
 
 - **No auth, no accounts, no PII egress.** Everything is local; there is no user
   database, session, or third-party call in the app runtime.
@@ -434,7 +434,7 @@ URL — deferred for security/hygiene reasons.)
 
 ---
 
-## 12. Testing strategy
+## 12. 🧪 Testing strategy
 
 - **Vitest** unit tests target the pure engine (`calculations.test.ts`) and scenario
   logic (`scenarios.test.ts`): loan math, the VA funding-fee table across every
@@ -450,7 +450,7 @@ URL — deferred for security/hygiene reasons.)
 
 ---
 
-## 13. Evolution (from the CHANGELOG)
+## 13. 📈 Evolution (from the CHANGELOG)
 
 Sentinel VA grew from an initial local-first calculator (0.1.0) through: state
 selector + affordability donuts + persistence (0.2.x), neon-pill UI + component
@@ -468,7 +468,7 @@ math first, then progressively harden and bound the delivery**.
 
 ---
 
-## 14. Quick reference
+## 14. 📑 Quick reference
 
 | Concern            | Location |
 |--------------------|----------|
