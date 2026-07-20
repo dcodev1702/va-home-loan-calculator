@@ -13,7 +13,7 @@ A private, local-first VA home-loan planning workspace built with Next.js, TypeS
 - Shows total interest saved, time saved, payoff horizon, remaining-balance graph, and year-over-year interest savings.
 - Saves named calculation scenarios locally through a SQLite-backed API. No authentication is required.
 
-## Screenshots
+## Application Tour
 
 ### Financial overview and affordability mix
 

@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.6] - 2026-07-20
+
+### Changed
+- Renamed the README "Screenshots" section to "Application Tour" to better showcase the app as a guided walkthrough. Images and their narratives are unchanged.
+
 ## [0.7.5] - 2026-07-19
 
 ### Changed
