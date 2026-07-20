@@ -4,6 +4,11 @@ All notable changes to Sentinel VA are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project uses semantic-versioning intent.
 
+## [0.7.8] - 2026-07-20
+
+### Added
+- SBOM (Software Bill of Materials) generation: `scripts/generate-sbom.sh <version>` produces a CycloneDX JSON SBOM via Syft, committed under `sbom/`. Added the CycloneDX SBOM for the shipped image (`sbom/sentinel-va-0.7.8.cdx.json`). Documented in ARCHITECTURE.md §9.5 and folded into the release SOP (§10) as a mandatory per-rebuild step so the SBOM never drifts from the shipped digest. Vulnerability scanning remains separate (Docker Scout).
+
 ## [0.7.7] - 2026-07-20
 
 ### Changed
